@@ -1,6 +1,5 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: "class", // Enables dark mode using a class
+export default {
+  darkMode: "class",
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -16,7 +15,7 @@ module.exports = {
         background: "#FFFFFF",
         foreground: "#1F2937",
         primary: {
-          DEFAULT: "#6366F1", // Indigo
+          DEFAULT: "#6366F1",
           foreground: "#E0E7FF",
         },
         secondary: {
@@ -43,12 +42,12 @@ module.exports = {
           DEFAULT: "#FFFFFF",
           foreground: "#374151",
         },
-        success: "#10B981", // Green for completed tasks
-        warning: "#F59E0B", // Amber for in-progress tasks
-        danger: "#EF4444", // Red for important actions
-        info: "#3B82F6", // Blue for informational messages
-        light: "#F3F4F6", // Light gray for backgrounds
-        dark: "#1F2937", // Dark gray for text
+        success: "#10B981",
+        warning: "#F59E0B",
+        danger: "#EF4444",
+        info: "#3B82F6",
+        light: "#F3F4F6",
+        dark: "#1F2937",
         gray: {
           100: "#F9FAFB",
           200: "#F3F4F6",
@@ -60,10 +59,9 @@ module.exports = {
           800: "#374151",
           900: "#1F2937",
         },
-        // Task section colors
-        todo: "#FBCFE8", // Pink for todo
-        inprogress: "#BFDBFE", // Blue for in-progress tasks
-        completed: "#A7F3D0", // Green for completed tasks
+        todo: "#FBCFE8",
+        inprogress: "#BFDBFE",
+        completed: "#A7F3D0",
       },
       borderRadius: {
         lg: "12px",
@@ -75,8 +73,7 @@ module.exports = {
       },
       boxShadow: {
         card: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
-        dropdown:
-          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        dropdown: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
       },
     },
   },
