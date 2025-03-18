@@ -12,6 +12,7 @@ import {
   updateTaskStatus,
   subscribeToTasks,
   fixTaskStatuses,
+  updateMultipleTaskStatuses, // Add this import
 } from "../services/taskService"
 import type { Task, TaskFormData, TaskStatus } from "../types/task"
 
@@ -276,6 +277,50 @@ export const useTasks = () => {
     },
   )
 
+  // Add this mutation inside the useTasks function
+  const updateMultipleTaskStatusesMutation = useMutation(
+    (data: { taskIds: string[]; status: string }) => updateMultipleTaskStatuses(data.taskIds, data.status),
+    {
+      onMutate: async ({ taskIds, status }) => {
+        // Cancel any outgoing refetches
+        await queryClient.cancelQueries(["tasks", user?.uid])
+
+        // Snapshot the previous value
+        const previousTasks = [...tasks]
+
+        // Optimistically update to the new value
+        setTasks((prev) =>
+          prev.map((task) =>
+            taskIds.includes(task.id)
+              ? { ...task, status: status as TaskStatus, updatedAt: new Date().toISOString() }
+              : task,
+          ),
+        )
+
+        // Return a context object with the snapshotted value
+        return { previousTasks }
+      },
+      onSuccess: (_, variables) => {
+        console.log("Multiple task statuses updated successfully:", variables.taskIds, "to", variables.status)
+        // We don't need to manually fetch tasks here as the subscription will update the state
+      },
+      onError: (error: any, variables, context: any) => {
+        console.error(
+          "Error updating multiple task statuses:",
+          error,
+          "for tasks:",
+          variables.taskIds,
+          "to status:",
+          variables.status,
+        )
+        // If the mutation fails, use the context returned from onMutate to roll back
+        if (context?.previousTasks) {
+          setTasks(context.previousTasks)
+        }
+      },
+    },
+  )
+
   return {
     tasks,
     isLoading,
@@ -286,6 +331,7 @@ export const useTasks = () => {
     deleteTask: deleteTaskMutation.mutate,
     deleteMultipleTasks: deleteMultipleTasksMutation.mutate,
     updateTaskStatus: updateTaskStatusMutation.mutate,
+    updateMultipleTaskStatuses: updateMultipleTaskStatusesMutation.mutate, // Add this line
     refreshTasks: fetchTasks,
     fixTaskStatuses: fixTaskStatusesFunction,
   }

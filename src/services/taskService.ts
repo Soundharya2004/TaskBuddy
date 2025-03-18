@@ -373,3 +373,33 @@ export const fixTaskStatuses = async (userId: string): Promise<void> => {
   }
 }
 
+// Add this new function to the file
+export const updateMultipleTaskStatuses = async (taskIds: string[], status: string): Promise<void> => {
+  try {
+    console.log("Updating status for multiple tasks:", taskIds, "to", status)
+    const batch = writeBatch(db)
+
+    // Normalize the status
+    const normalizedStatus = normalizeStatus(status)
+
+    // First, get all tasks to update
+    for (const taskId of taskIds) {
+      const taskRef = doc(db, TASKS_COLLECTION, taskId)
+      const taskDoc = await getDoc(taskRef)
+
+      if (taskDoc.exists()) {
+        batch.update(taskRef, {
+          status: normalizedStatus,
+          updatedAt: serverTimestamp(),
+        })
+      }
+    }
+
+    await batch.commit()
+    console.log("Multiple tasks status updated to:", normalizedStatus)
+  } catch (error) {
+    console.error("Error updating multiple task statuses:", error)
+    throw error
+  }
+}
+
