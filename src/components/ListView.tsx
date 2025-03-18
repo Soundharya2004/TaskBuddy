@@ -145,11 +145,9 @@ const ListView = ({
   tasks,
   isLoading,
   onEditTask,
-  onDeleteTask,
   onDeleteMultipleTasks,
   onUpdateTaskStatus,
   onCreateTask,
-  searchQuery,
 }: ListViewProps) => {
   console.log("ListView rendering with tasks:", tasks.length, "Loading:", isLoading)
   const [selectedTasks, setSelectedTasks] = useState<string[]>([])
