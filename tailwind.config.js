@@ -1,73 +1,76 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  darkMode: "class",
+// Convert from CommonJS to ES Module syntax
+export default {
+  darkMode: ["class"],
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
+    "*.{js,ts,jsx,tsx,mdx}",
+    "app/**/*.{ts,tsx}",
+    "components/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
       colors: {
-        border: "#E5E7EB",
-        input: "#F3F4F6",
-        ring: "#6366F1",
-        background: "#FFFFFF",
-        foreground: "#1F2937",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#6366F1",
-          foreground: "#E0E7FF",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#4F46E5",
-          foreground: "#C7D2FE",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
-          DEFAULT: "#EF4444",
-          foreground: "#FEE2E2",
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "#D1D5DB",
-          foreground: "#E5E7EB",
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "#FBCFE8",
-          foreground: "#FCE7F3",
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
-          DEFAULT: "#F9FAFB",
-          foreground: "#111827",
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#374151",
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
-        success: "#10B981",
-        warning: "#F59E0B",
-        danger: "#EF4444",
-        info: "#3B82F6",
-        light: "#F3F4F6",
-        dark: "#1F2937",
-        gray: {
-          100: "#F9FAFB",
-          200: "#F3F4F6",
-          300: "#E5E7EB",
-          400: "#D1D5DB",
-          500: "#9CA3AF",
-          600: "#6B7280",
-          700: "#4B5563",
-          800: "#374151",
-          900: "#1F2937",
-        },
-        todo: "#FBCFE8",
-        inprogress: "#BFDBFE",
-        completed: "#A7F3D0",
+        // Existing colors - these will override the shadcn/ui defaults if they conflict
+        primary: "#6366F1", // Indigo color from the design
+        secondary: "#4F46E5", // Darker indigo for hover states
+        success: "#10B981", // Green for completed tasks
+        warning: "#F59E0B", // Amber for in progress
+        danger: "#EF4444", // Red for important or delete actions
+        info: "#3B82F6", // Blue for info
+        light: "#F3F4F6", // Light gray for backgrounds
+        dark: "#1F2937", // Dark gray for text
+        "gray-100": "#F9FAFB",
+        "gray-200": "#F3F4F6",
+        "gray-300": "#E5E7EB",
+        "gray-400": "#D1D5DB",
+        "gray-500": "#9CA3AF",
+        "gray-600": "#6B7280",
+        "gray-700": "#4B5563",
+        "gray-800": "#374151",
+        "gray-900": "#1F2937",
+        // Task section colors
+        todo: "#FBCFE8", // Pink for todo
+        inprogress: "#BFDBFE", // Blue for in progress
+        completed: "#A7F3D0", // Green for completed
       },
       borderRadius: {
-        lg: "12px",
-        md: "8px",
-        sm: "4px",
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
         sans: ["Inter", "sans-serif"],
@@ -78,5 +81,9 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
-};
+  plugins: [
+    // Import plugins using ES module syntax
+    (await import("tailwindcss-animate")).default,
+  ],
+}
+

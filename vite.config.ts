@@ -9,5 +9,9 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  // Add this to ensure proper handling of CommonJS modules
+  optimizeDeps: {
+    include: ["tailwindcss-animate"],
+  },
 })
 
