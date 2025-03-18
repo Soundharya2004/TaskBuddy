@@ -14,4 +14,9 @@ interface ImportMetaEnv {
     readonly env: ImportMetaEnv
   }
   
+  // Add global definitions
+  interface Window {
+    global: Window
+  }
+  
   

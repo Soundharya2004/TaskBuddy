@@ -3,6 +3,12 @@ import { getAuth } from "firebase/auth"
 import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
 
+// Polyfill global for Firebase
+if (typeof window !== "undefined") {
+  // @ts-ignore
+  window.global = window
+}
+
 // Make sure all environment variables are defined
 const requiredEnvVars = [
   "VITE_FIREBASE_API_KEY",
