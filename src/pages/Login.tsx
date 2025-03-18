@@ -1,13 +1,48 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { FcGoogle } from "react-icons/fc"
 import { useAuth } from "../hooks/useAuth"
-import { Navigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 
 const Login = () => {
-  const { user, signInWithGoogle } = useAuth()
+  const { user, loading, signInWithGoogle } = useAuth()
+  const navigate = useNavigate()
+  const [isRedirecting, setIsRedirecting] = useState(false)
 
-  if (user) {
+  // Handle authentication state changes
+  useEffect(() => {
+    if (user && !loading) {
+      console.log("User authenticated, redirecting to dashboard:", user.uid)
+      setIsRedirecting(true)
+      navigate("/dashboard")
+    }
+  }, [user, loading, navigate])
+
+  // Handle Google sign-in
+  const handleSignIn = async () => {
+    try {
+      console.log("Attempting Google sign in")
+      await signInWithGoogle()
+      // The useEffect above will handle redirection after successful sign-in
+    } catch (error) {
+      console.error("Error signing in with Google:", error)
+      setIsRedirecting(false)
+    }
+  }
+
+  // Show loading state if we're in the process of checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="w-16 h-16 border-t-4 border-primary border-solid rounded-full animate-spin"></div>
+      </div>
+    )
+  }
+
+  // Redirect if user is already logged in
+  if (user && !isRedirecting) {
+    console.log("User already logged in, redirecting to dashboard")
     return <Navigate to="/dashboard" />
   }
 
@@ -33,11 +68,14 @@ const Login = () => {
 
         <div className="w-full">
           <button
-            onClick={signInWithGoogle}
-            className="w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-md shadow-sm bg-black text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            onClick={handleSignIn}
+            disabled={isRedirecting}
+            className={`w-full flex items-center justify-center gap-3 py-3 px-4 border border-gray-300 rounded-md shadow-sm bg-black text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+              isRedirecting ? "opacity-70 cursor-not-allowed" : ""
+            }`}
           >
             <FcGoogle className="text-xl bg-white rounded-full" />
-            <span>Continue with Google</span>
+            <span>{isRedirecting ? "Redirecting..." : "Continue with Google"}</span>
           </button>
         </div>
       </div>

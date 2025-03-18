@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom"
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom"
 import { useAuth } from "./hooks/useAuth"
 import Login from "./pages/Login"
 import Dashboard from "./pages/Dashboard"
@@ -11,13 +11,17 @@ import LoadingScreen from "./components/LoadingScreen"
 function App() {
   const { user, loading } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   useEffect(() => {
-    if (!loading && user) {
+    // Only redirect if we're not already on the dashboard and user is logged in
+    if (!loading && user && location.pathname !== "/dashboard") {
+      console.log("App: User authenticated, redirecting to dashboard:", user.uid)
       navigate("/dashboard")
     }
-  }, [user, loading, navigate])
+  }, [user, loading, navigate, location.pathname])
 
+  // Show loading screen while checking authentication
   if (loading) {
     return <LoadingScreen />
   }
@@ -33,6 +37,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
       <Route path="*" element={<Navigate to={user ? "/dashboard" : "/login"} />} />
     </Routes>
   )
@@ -40,3 +45,4 @@ function App() {
 
 export default App
 
+  

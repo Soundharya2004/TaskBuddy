@@ -1,7 +1,7 @@
 "use client"
 
 import type { ReactNode } from "react"
-import { Navigate } from "react-router-dom"
+import { Navigate, useLocation } from "react-router-dom"
 import { useAuth } from "../hooks/useAuth"
 import LoadingScreen from "./LoadingScreen"
 
@@ -11,15 +11,20 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const { user, loading } = useAuth()
+  const location = useLocation()
 
+  // Show loading screen while checking authentication
   if (loading) {
     return <LoadingScreen />
   }
 
+  // Redirect to login if not authenticated
   if (!user) {
-    return <Navigate to="/login" />
+    console.log("ProtectedRoute: No user, redirecting to login")
+    return <Navigate to="/login" state={{ from: location }} replace />
   }
 
+  console.log("ProtectedRoute: User authenticated, rendering protected content")
   return <>{children}</>
 }
 
