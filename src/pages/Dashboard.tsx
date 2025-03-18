@@ -29,6 +29,7 @@ const Dashboard = () => {
     updateTaskStatus,
     refreshTasks,
     fixTaskStatuses,
+    updateMultipleTaskStatuses,
   } = useTasks()
 
   // Fix task statuses and refresh tasks when the component mounts
@@ -103,6 +104,14 @@ const Dashboard = () => {
     [updateTaskStatus],
   )
 
+  const handleUpdateMultipleTaskStatuses = useCallback(
+    (taskIds: string[], status: string) => {
+      console.log("Dashboard: Updating multiple task statuses:", taskIds, "to", status)
+      updateMultipleTaskStatuses({ taskIds, status })
+    },
+    [updateMultipleTaskStatuses],
+  )
+
   // Filter tasks based on search query, category, and due date
   const filteredTasks = useMemo(() => {
     return tasks.filter((task) => {
@@ -161,6 +170,7 @@ const Dashboard = () => {
             onDeleteTask={handleDeleteTask}
             onDeleteMultipleTasks={handleDeleteMultipleTasks}
             onUpdateTaskStatus={handleUpdateTaskStatus}
+            onUpdateMultipleTaskStatuses={handleUpdateMultipleTaskStatuses}
             onCreateTask={handleOpenCreateModal}
             searchQuery={searchQuery}
           />

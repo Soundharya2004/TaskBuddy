@@ -81,5 +81,9 @@ body {
   .completed-section {
     @apply bg-green-100;
   }
+   
+  .auth-debugger {
+    display: none !important;
+}
 }
 

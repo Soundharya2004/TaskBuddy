@@ -28,6 +28,7 @@ interface ListViewProps {
   onDeleteTask: (taskId: string) => void
   onDeleteMultipleTasks: (taskIds: string[]) => void
   onUpdateTaskStatus: (taskId: string, status: string) => void
+  onUpdateMultipleTaskStatuses: (taskIds: string[], status: string) => void // Add this line
   onCreateTask: (status: TaskStatus) => void
   searchQuery: string
 }
@@ -147,6 +148,7 @@ const ListView = ({
   onEditTask,
   onDeleteMultipleTasks,
   onUpdateTaskStatus,
+  onUpdateMultipleTaskStatuses,
   onCreateTask,
 }: ListViewProps) => {
   console.log("ListView rendering with tasks:", tasks.length, "Loading:", isLoading)
@@ -376,7 +378,27 @@ const ListView = ({
         {selectedTasks.length > 0 && (
           <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex items-center justify-between z-50 rounded-t-lg shadow-lg">
             <div className="text-sm font-medium">{selectedTasks.length} tasks selected</div>
-            <div className="flex space-x-2">
+            <div className="flex space-x-2 items-center">
+              <div className="flex items-center">
+                <span className="text-sm text-gray-600 mr-2">Change status:</span>
+                <select
+                  className="text-sm border border-gray-300 rounded-md py-1.5 px-2"
+                  onChange={(e) => {
+                    if (e.target.value !== "") {
+                      onUpdateMultipleTaskStatuses(selectedTasks, e.target.value)
+                      setSelectedTasks([])
+                    }
+                  }}
+                  value=""
+                >
+                  <option value="" disabled>
+                    Select status
+                  </option>
+                  <option value="todo">To Do</option>
+                  <option value="inProgress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
               <button
                 className="px-3 py-1.5 text-sm bg-gray-200 text-gray-800 rounded-md"
                 onClick={() => setSelectedTasks([])}

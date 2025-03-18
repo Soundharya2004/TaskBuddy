@@ -14,28 +14,17 @@ export default defineConfig({
     postcss: "./postcss.config.cjs",
   },
   optimizeDeps: {
-    include: [
-      "tailwindcss",
-      "autoprefixer",
-      "firebase",
-      "firebase/app",
-      "firebase/auth",
-      "firebase/firestore",
-      "firebase/storage",
-      "@firebase/app",
-      "@firebase/auth",
-      "@firebase/firestore",
-      "@firebase/storage",
-      "@firebase/util",
-      "@firebase/component",
-      "@firebase/logger",
-    ],
+    
     esbuildOptions: {
-      // Node.js global to browser globalThis
       define: {
-        global: "globalThis",
+        
+        global: "globalThis", 
+       
+  
+        
       },
     },
+    
   },
   build: {
     commonjsOptions: {
