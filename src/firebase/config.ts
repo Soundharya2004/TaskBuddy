@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app"
 import { getAuth } from "firebase/auth"
-import { getFirestore } from "firebase/firestore"
+import { getFirestore, enableIndexedDbPersistence } from "firebase/firestore"
 import { getStorage } from "firebase/storage"
-import { enableIndexedDbPersistence } from "firebase/firestore"
 
 // Make sure all environment variables are defined
 const requiredEnvVars = [
@@ -37,8 +36,9 @@ export const auth = getAuth(app)
 export const db = getFirestore(app)
 export const storage = getStorage(app)
 
-// After initializing Firebase services, add this logging
+// Log Firebase initialization details
 console.log("Firebase initialized with project:", import.meta.env.VITE_FIREBASE_PROJECT_ID)
+console.log("Auth domain:", import.meta.env.VITE_FIREBASE_AUTH_DOMAIN)
 console.log("Auth service initialized:", !!auth)
 console.log("Firestore service initialized:", !!db)
 console.log("Storage service initialized:", !!storage)

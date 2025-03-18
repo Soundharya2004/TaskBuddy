@@ -9,26 +9,44 @@ const Login = () => {
   const { user, loading, signInWithGoogle } = useAuth()
   const navigate = useNavigate()
   const [isRedirecting, setIsRedirecting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [authAttempted, setAuthAttempted] = useState(false)
 
   // Handle authentication state changes
   useEffect(() => {
     if (user && !loading) {
-      console.log("User authenticated, redirecting to dashboard:", user.uid)
+      console.log("Login: User authenticated, redirecting to dashboard:", user.uid)
       setIsRedirecting(true)
-      navigate("/dashboard")
+
+      // Use a timeout to ensure the state update happens before navigation
+      setTimeout(() => {
+        navigate("/dashboard", { replace: true })
+      }, 100)
     }
   }, [user, loading, navigate])
 
   // Handle Google sign-in
   const handleSignIn = async () => {
     try {
-      console.log("Attempting Google sign in")
+      setError(null)
+      setIsRedirecting(true)
+      setAuthAttempted(true)
+      console.log("Login: Attempting Google sign in")
       await signInWithGoogle()
       // The useEffect above will handle redirection after successful sign-in
     } catch (error) {
-      console.error("Error signing in with Google:", error)
+      console.error("Login: Error signing in with Google:", error)
+      setError("Failed to sign in with Google. Please try again.")
       setIsRedirecting(false)
     }
+  }
+
+  // Debug information
+  const debugInfo = {
+    userState: user ? `Authenticated (${user.uid})` : "Not authenticated",
+    loadingState: loading ? "Loading" : "Not loading",
+    redirectingState: isRedirecting ? "Redirecting" : "Not redirecting",
+    authAttempted: authAttempted ? "Yes" : "No",
   }
 
   // Show loading state if we're in the process of checking auth
@@ -42,8 +60,8 @@ const Login = () => {
 
   // Redirect if user is already logged in
   if (user && !isRedirecting) {
-    console.log("User already logged in, redirecting to dashboard")
-    return <Navigate to="/dashboard" />
+    console.log("Login: User already logged in, redirecting to dashboard")
+    return <Navigate to="/dashboard" replace />
   }
 
   return (
@@ -77,7 +95,25 @@ const Login = () => {
             <FcGoogle className="text-xl bg-white rounded-full" />
             <span>{isRedirecting ? "Redirecting..." : "Continue with Google"}</span>
           </button>
+
+          {error && (
+            <div className="mt-4 p-3 bg-red-100 border border-red-300 text-red-700 rounded-md text-sm">{error}</div>
+          )}
         </div>
+
+        {/* Debug information - only visible in development */}
+        {process.env.NODE_ENV !== "production" && (
+          <div className="mt-8 p-4 bg-gray-100 rounded-md w-full text-xs font-mono">
+            <h3 className="font-bold mb-2">Debug Info:</h3>
+            <ul>
+              {Object.entries(debugInfo).map(([key, value]) => (
+                <li key={key}>
+                  {key}: {value}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   )

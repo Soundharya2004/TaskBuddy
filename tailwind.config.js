@@ -4,9 +4,8 @@ module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
-    "*.{js,ts,jsx,tsx,mdx}",
-    "app/**/*.{ts,tsx}",
-    "components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
@@ -17,23 +16,23 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
+          DEFAULT: "#6366F1", // Indigo color from the design
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
+          DEFAULT: "#4F46E5",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
+          DEFAULT: "#EF4444",
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
+          DEFAULT: "#D1D5DB",
           foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
+          DEFAULT: "#FBCFE8",
           foreground: "hsl(var(--accent-foreground))",
         },
         popover: {
@@ -44,13 +43,10 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Existing colors - these will override the shadcn/ui defaults if they conflict
-        primary: "#6366F1", // Indigo color from the design
-        secondary: "#4F46E5", // Darker indigo for hover states
         success: "#10B981", // Green for completed tasks
-        warning: "#F59E0B", // Amber for in progress
+        warning: "#F59E0B", // Amber for in-progress tasks
         danger: "#EF4444", // Red for important or delete actions
-        info: "#3B82F6", // Blue for info
+        info: "#3B82F6", // Blue for informational purposes
         light: "#F3F4F6", // Light gray for backgrounds
         dark: "#1F2937", // Dark gray for text
         "gray-100": "#F9FAFB",
@@ -64,8 +60,8 @@ module.exports = {
         "gray-900": "#1F2937",
         // Task section colors
         todo: "#FBCFE8", // Pink for todo
-        inprogress: "#BFDBFE", // Blue for in progress
-        completed: "#A7F3D0", // Green for completed
+        inprogress: "#BFDBFE", // Blue for in-progress tasks
+        completed: "#A7F3D0", // Green for completed tasks
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -82,5 +78,4 @@ module.exports = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-}
-
+};

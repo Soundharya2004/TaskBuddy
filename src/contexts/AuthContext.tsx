@@ -33,58 +33,85 @@ interface AuthProviderProps {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [authInitialized, setAuthInitialized] = useState(false)
 
   useEffect(() => {
-    console.log("Setting up auth state listener")
+    console.log("AuthProvider: Setting up auth state listener")
 
-    // Set persistence to LOCAL to ensure the user stays logged in
-    setPersistence(auth, browserLocalPersistence)
-      .then(() => {
-        console.log("Auth persistence set to LOCAL")
-      })
-      .catch((error) => {
-        console.error("Error setting auth persistence:", error)
-      })
+    const setupAuth = async () => {
+      try {
+        // Set persistence to LOCAL to ensure the user stays logged in
+        await setPersistence(auth, browserLocalPersistence)
+        console.log("AuthProvider: Auth persistence set to LOCAL")
+
+        // Check if we're already authenticated
+        const currentUser = auth.currentUser
+        if (currentUser) {
+          console.log("AuthProvider: Already authenticated as:", currentUser.uid)
+          setUser(currentUser)
+        }
+
+        setAuthInitialized(true)
+      } catch (error) {
+        console.error("AuthProvider: Error setting up auth:", error)
+        setAuthInitialized(true)
+      }
+    }
+
+    setupAuth()
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      console.log("Auth state changed:", currentUser ? `User ${currentUser.uid}` : "No user")
+      console.log("AuthProvider: Auth state changed:", currentUser ? `User ${currentUser.uid}` : "No user")
       setUser(currentUser)
       setLoading(false)
     })
 
     return () => {
-      console.log("Cleaning up auth state listener")
+      console.log("AuthProvider: Cleaning up auth state listener")
       unsubscribe()
     }
   }, [])
 
   const signInWithGoogle = async () => {
     try {
-      console.log("Attempting to sign in with Google")
+      console.log("AuthProvider: Attempting to sign in with Google")
+      setLoading(true)
+
       const provider = new GoogleAuthProvider()
+      // Add scopes if needed
+      provider.addScope("email")
+      provider.addScope("profile")
+
+      // Force account selection even when already signed in
+      provider.setCustomParameters({
+        prompt: "select_account",
+      })
+
       const result = await signInWithPopup(auth, provider)
-      console.log("Successfully signed in with Google:", result.user.uid)
-      // Don't return the result to match the Promise<void> return type
+      console.log("AuthProvider: Successfully signed in with Google:", result.user.uid)
     } catch (error) {
-      console.error("Error signing in with Google:", error)
+      console.error("AuthProvider: Error signing in with Google:", error)
+      setLoading(false)
       throw error
     }
   }
 
   const signOut = async () => {
     try {
-      console.log("Attempting to sign out")
+      console.log("AuthProvider: Attempting to sign out")
+      setLoading(true)
       await firebaseSignOut(auth)
-      console.log("Successfully signed out")
+      console.log("AuthProvider: Successfully signed out")
     } catch (error) {
-      console.error("Error signing out:", error)
+      console.error("AuthProvider: Error signing out:", error)
+      setLoading(false)
       throw error
     }
   }
 
   const value = {
     user,
-    loading,
+    loading: loading || !authInitialized,
     signInWithGoogle,
     signOut,
   }
